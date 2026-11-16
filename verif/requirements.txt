@@ -1,0 +1,4 @@
+# SpaDA backend dependencies. Tests use Python's unittest, not pytest.
+lark>=1.3.1
+networkx>=2.8
+numpy>=1.24

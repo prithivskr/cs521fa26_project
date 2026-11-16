@@ -1,0 +1,12 @@
+# Hooks for the rocq-generated Makefile. Keep this file when regenerating it.
+_build:
+	mkdir -p _build
+Extract.vo SpadaExtract.vo SpadaNumericExtract.vo SummaExtract.vo: | _build
+
+.PHONY: check emit full-test
+check: all
+	rocq check -Q . SpatialCSL SpatialCSL.Spatial SpatialCSL.CSL SpatialCSL.Examples SpatialCSL.SpadaProgramProofs SpatialCSL.SpadaKernelProofs SpatialCSL.SpadaRoutingExamples SpatialCSL.SummaLocalProof
+emit:
+	$(MAKE) -f Full.mk lower
+full-test:
+	$(MAKE) -f Full.mk test numeric-test

@@ -1,0 +1,23 @@
+-Q . SpatialCSL
+Spatial.v
+CSL.v
+Examples.v
+Extract.v
+SpadaIR.v
+SpadaSemantics.v
+SpadaArithmetic.v
+SpadaEquivalence.v
+SpadaElaboration.v
+SpadaExamples.v
+SpadaProgramProofs.v
+SpadaExtract.v
+SpadaNumericExtract.v
+SpadaRefinement.v
+SpadaKernelProofs.v
+SpadaRouting.v
+SpadaRoutingCSL.v
+SpadaDeployment.v
+SpadaRoutingExamples.v
+Summa.v
+SummaLocalProof.v
+SummaExtract.v

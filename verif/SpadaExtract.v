@@ -1,0 +1,4 @@
+From Stdlib Require Import Extraction ExtrOcamlBasic ExtrOcamlNatInt ExtrOcamlNativeString.
+From SpatialCSL Require Import SpadaExamples SpadaKernelProofs SpadaRoutingExamples.
+Extraction Language OCaml.
+Extraction "_build/spada_generated.ml" ping_json multicast_json pipeline_json host_json fixtures_json epochs_json meta_json bounded_json external_json manual_ping_json ping_routing_text multicast_routing_text.

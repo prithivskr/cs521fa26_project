@@ -1,0 +1,11 @@
+*.vo
+*.vos
+*.vok
+*.glob
+.*.aux
+.lia.cache
+_build/
+generated/
+.venv/
+__pycache__/
+generated-spada/

@@ -19,7 +19,7 @@ from typing import get_args, get_origin, get_type_hints, Union, Literal
 import types
 
 # Prefer the sibling checkout over an unrelated globally installed SpaDA.
-SPADA_ROOT = Path(__file__).resolve().parents[1] / "spada"
+SPADA_ROOT = Path(os.environ.get("SPADA_ROOT") or Path(__file__).resolve().parents[1] / "spada")
 sys.path.insert(0, str(SPADA_ROOT))
 from spada.syntax.spatial_ir import irnodes as ir
 from spada.syntax.common.types import ScalarType
@@ -124,6 +124,10 @@ def validate_types(node):
     for f in dataclasses.fields(node):
         if (isinstance(node, ir.ConstantLiteral) and f.name == "value"
                 and node.dtype == ScalarType.bool and type(node.value) is bool):
+            continue
+        # SendStatement.validate allows a ternary stream; its annotation does not.
+        if (isinstance(node, ir.SendStatement) and f.name == "stream_name"
+                and isinstance(node.stream_name, ir.TernaryOperator)):
             continue
         if f.init and not matches(getattr(node, f.name), hints[f.name]):
             raise ValueError(f"invalid type for {type(node).__name__}.{f.name}")

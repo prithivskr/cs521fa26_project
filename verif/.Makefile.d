@@ -40,8 +40,8 @@ Summa.vo Summa.glob Summa.v.beautified Summa.required_vo: Summa.v SpadaArithmeti
 Summa.vos Summa.vok Summa.required_vos: Summa.v SpadaArithmetic.vos SpadaElaboration.vos SpadaIR.vos SpadaSemantics.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 SummaLocalProof.vo SummaLocalProof.glob SummaLocalProof.v.beautified SummaLocalProof.required_vo: SummaLocalProof.v SpadaIR.vo SpadaSemantics.vo Summa.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 SummaLocalProof.vos SummaLocalProof.vok SummaLocalProof.required_vos: SummaLocalProof.v SpadaIR.vos SpadaSemantics.vos Summa.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
-SummaExtract.vo SummaExtract.glob SummaExtract.v.beautified SummaExtract.required_vo: SummaExtract.v Summa.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
-SummaExtract.vos SummaExtract.vok SummaExtract.required_vos: SummaExtract.v Summa.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SummaExtract.vo SummaExtract.glob SummaExtract.v.beautified SummaExtract.required_vo: SummaExtract.v SpadaIR.vo Summa.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SummaExtract.vos SummaExtract.vok SummaExtract.required_vos: SummaExtract.v SpadaIR.vos Summa.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 ReduceSpec.vo ReduceSpec.glob ReduceSpec.v.beautified ReduceSpec.required_vo: ReduceSpec.v /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 ReduceSpec.vos ReduceSpec.vok ReduceSpec.required_vos: ReduceSpec.v /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 SpadaDataflow.vo SpadaDataflow.glob SpadaDataflow.v.beautified SpadaDataflow.required_vo: SpadaDataflow.v ReduceSpec.vo SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker

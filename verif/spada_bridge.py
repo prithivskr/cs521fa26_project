@@ -19,7 +19,7 @@ from typing import get_args, get_origin, get_type_hints, Union, Literal
 import types
 
 # Prefer the sibling checkout over an unrelated globally installed SpaDA.
-SPADA_ROOT = Path(__file__).resolve().parents[1] / "spada"
+SPADA_ROOT = Path(os.environ.get("SPADA_ROOT") or Path(__file__).resolve().parents[1] / "spada")
 sys.path.insert(0, str(SPADA_ROOT))
 from spada.syntax.spatial_ir import irnodes as ir
 from spada.syntax.common.types import ScalarType

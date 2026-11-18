@@ -1,7 +1,7 @@
 From Stdlib Require Import List Permutation.
 Import ListNotations.
 
-(** * Specification: element-wise reduction
+(** * Specification: element-wise reduction (shared by the reduction proofs)
 
     [reduce [a0; a1; ...; aK-1]] is the element-wise sum
     [a0 + (a1 + (... + aK-1))], nested to the right. Addition is an arbitrary

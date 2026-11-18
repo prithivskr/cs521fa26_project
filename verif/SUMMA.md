@@ -71,6 +71,19 @@ semantics, not a bitwise CSL/hardware guarantee. SDK compilation, simulation and
 hardware performance measurement were unavailable here (no Singularity or
 running Docker daemon).
 
+## Full-kernel proof (`SummaProof.v`)
+
+`SummaProof.v` proves the lowered IR kernels themselves under the
+hardware-agnostic semantics of `SpadaDataflow.v`, including the broadcasts.
+For the example dimensions and both orders, `summa_correct` runs the whole
+kernel phase by phase (`run_phased`) from arbitrary symbolic A, B, C and scratch
+values, over any element type and any `fma`. Every PE finishes both phases and
+its `c` equals the ordered SUMMA fold (`Summa.run`). `summa_baseline_cached`
+follows, and both kernels are race-free (`summa_race_free`) and deadlock-free
+under rendezvous (`summa_deadlock_free`). This closes the gap noted above for the
+example: delivery of the stage operands is now proved, not assumed. CSL lowering
+remains trusted.
+
 ## Reproduce
 
 From `verif/`:

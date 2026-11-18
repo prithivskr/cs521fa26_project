@@ -5,7 +5,7 @@ Extract.vo SpadaExtract.vo SpadaNumericExtract.vo SummaExtract.vo: | _build
 
 .PHONY: check emit full-test
 check: all
-	rocq check -Q . SpatialCSL SpatialCSL.Spatial SpatialCSL.CSL SpatialCSL.Examples SpatialCSL.SpadaProgramProofs SpatialCSL.SpadaKernelProofs SpatialCSL.SpadaRoutingExamples SpatialCSL.SummaLocalProof
+	rocq check -Q . SpatialCSL SpatialCSL.Spatial SpatialCSL.CSL SpatialCSL.Examples SpatialCSL.SpadaProgramProofs SpatialCSL.SpadaKernelProofs SpatialCSL.SpadaRoutingExamples SpatialCSL.SummaLocalProof SpatialCSL.ChainReduceProof SpatialCSL.SpadaRaces SpatialCSL.SpadaDeadlock SpatialCSL.SummaProof
 emit:
 	$(MAKE) -f Full.mk lower
 full-test:

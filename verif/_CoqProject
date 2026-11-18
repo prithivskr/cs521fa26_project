@@ -21,5 +21,11 @@ SpadaRoutingExamples.v
 Summa.v
 SummaLocalProof.v
 SummaExtract.v
+ReduceSpec.v
+SpadaDataflow.v
 ChainReduce.v
 ChainReduceVariant.v
+ChainReduceProof.v
+SpadaRaces.v
+SpadaDeadlock.v
+SummaProof.v

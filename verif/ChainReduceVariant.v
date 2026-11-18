@@ -5,7 +5,7 @@ Open Scope string_scope.
 Open Scope Z_scope.
 
 (** Receive-first relay: avoids a SpaDA switch-ordering bug that stalls
-    [ChainReduce] in the simulator. Proof: ../kahn/ChainReduceProof.v. *)
+    [ChainReduce] in the simulator. Proof: ChainReduceProof.v. *)
 Module ChainReduceRecvFirst.
 Import ChainReduce.
 Definition t_k := Slice (named "t") [var "k"].

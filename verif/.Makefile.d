@@ -42,7 +42,19 @@ SummaLocalProof.vo SummaLocalProof.glob SummaLocalProof.v.beautified SummaLocalP
 SummaLocalProof.vos SummaLocalProof.vok SummaLocalProof.required_vos: SummaLocalProof.v SpadaIR.vos SpadaSemantics.vos Summa.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 SummaExtract.vo SummaExtract.glob SummaExtract.v.beautified SummaExtract.required_vo: SummaExtract.v Summa.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 SummaExtract.vos SummaExtract.vok SummaExtract.required_vos: SummaExtract.v Summa.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+ReduceSpec.vo ReduceSpec.glob ReduceSpec.v.beautified ReduceSpec.required_vo: ReduceSpec.v /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+ReduceSpec.vos ReduceSpec.vok ReduceSpec.required_vos: ReduceSpec.v /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SpadaDataflow.vo SpadaDataflow.glob SpadaDataflow.v.beautified SpadaDataflow.required_vo: SpadaDataflow.v ReduceSpec.vo SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SpadaDataflow.vos SpadaDataflow.vok SpadaDataflow.required_vos: SpadaDataflow.v ReduceSpec.vos SpadaIR.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 ChainReduce.vo ChainReduce.glob ChainReduce.v.beautified ChainReduce.required_vo: ChainReduce.v SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 ChainReduce.vos ChainReduce.vok ChainReduce.required_vos: ChainReduce.v SpadaIR.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 ChainReduceVariant.vo ChainReduceVariant.glob ChainReduceVariant.v.beautified ChainReduceVariant.required_vo: ChainReduceVariant.v ChainReduce.vo SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
 ChainReduceVariant.vos ChainReduceVariant.vok ChainReduceVariant.required_vos: ChainReduceVariant.v ChainReduce.vos SpadaIR.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+ChainReduceProof.vo ChainReduceProof.glob ChainReduceProof.v.beautified ChainReduceProof.required_vo: ChainReduceProof.v ChainReduce.vo ChainReduceVariant.vo ReduceSpec.vo SpadaDataflow.vo SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+ChainReduceProof.vos ChainReduceProof.vok ChainReduceProof.required_vos: ChainReduceProof.v ChainReduce.vos ChainReduceVariant.vos ReduceSpec.vos SpadaDataflow.vos SpadaIR.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SpadaRaces.vo SpadaRaces.glob SpadaRaces.v.beautified SpadaRaces.required_vo: SpadaRaces.v ChainReduce.vo ChainReduceVariant.vo ReduceSpec.vo SpadaDataflow.vo SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SpadaRaces.vos SpadaRaces.vok SpadaRaces.required_vos: SpadaRaces.v ChainReduce.vos ChainReduceVariant.vos ReduceSpec.vos SpadaDataflow.vos SpadaIR.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SpadaDeadlock.vo SpadaDeadlock.glob SpadaDeadlock.v.beautified SpadaDeadlock.required_vo: SpadaDeadlock.v ChainReduce.vo ChainReduceVariant.vo SpadaDataflow.vo SpadaIR.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SpadaDeadlock.vos SpadaDeadlock.vok SpadaDeadlock.required_vos: SpadaDeadlock.v ChainReduce.vos ChainReduceVariant.vos SpadaDataflow.vos SpadaIR.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SummaProof.vo SummaProof.glob SummaProof.v.beautified SummaProof.required_vo: SummaProof.v SpadaDataflow.vo SpadaDeadlock.vo SpadaIR.vo SpadaRaces.vo Summa.vo /home/ndate/.opam/default/lib/rocq-runtime/rocqworker
+SummaProof.vos SummaProof.vok SummaProof.required_vos: SummaProof.v SpadaDataflow.vos SpadaDeadlock.vos SpadaIR.vos SpadaRaces.vos Summa.vos /home/ndate/.opam/default/lib/rocq-runtime/rocqworker

@@ -299,11 +299,79 @@ The SDK-style SUMMA matrix multiplication example, accumulator optimization,
 proofs, generated CSL and explicit proof boundaries are documented in
 [SUMMA.md](SUMMA.md). Build it with `make -f Full.mk summa summa-test`.
 
+## Hardware-agnostic kernel proofs
+
+`SpadaDataflow.v` gives `Spada.kernel` terms a value semantics taken from
+SpaDA's spatial spec (`irspec/docs/spatial/{spatial,async}.md`), not from CSL or
+the WSE. A kernel is written once in Rocq. The same term is proved correct
+against this semantics and exported through `spada_bridge.py` to CSL.
+
+- **Streams** are FIFO edges. A relative stream `s` sent from PE `p` in phase
+  `n` is `Edge n s p`; a receive at `q` reads the edge whose sender is
+  `q - (dx, dy)`. Argument streams are `Arg a index`. Routes, colours and
+  capacities do not appear.
+- **PEs** run their phases in order, with at most one compute block per phase.
+  More than one is undefined in SpaDA, so `pe_program` rejects it, as it does
+  compute blocks in the outermost scope.
+- **Statements** run in program order. SpaDA lets un-awaited asynchronous
+  statements run concurrently, but data races are undefined behaviour, so for
+  a race-free kernel program order is one legal schedule and gives the
+  kernel's values.
+- **`run`** executes whole PEs one at a time in a given order; **`run_phased`**
+  runs one compute block (a PE's next phase) per step, for kernels such as
+  SUMMA whose PEs swap roles between phases. Streams are unbounded; a receive
+  that finds too little data fails.
+- **Arithmetic** on data is abstract (the `data_ops` class: binary operators,
+  literals, `fma`), so proofs hold for any element type, including IEEE f32.
+  Index arithmetic is evaluated in `Z`, so geometry with a symbolic size `K`
+  still computes. Scalar fields are one-element arrays.
+
+Two checkers cover what a successful run does not:
+
+- **Races (`SpadaRaces.v`).** `race_free` accepts kernels where every
+  asynchronous statement is awaited immediately and every `map` body touches
+  only its own index. `race_free_run_task`: for such kernels, running `map`
+  iterations in any order gives the same state as program order.
+- **Deadlocks (`SpadaDeadlock.v`).** `kernel_check` extracts each PE's
+  element-level sends and receives and runs them under rendezvous (a send
+  waits for its receiver, the strictest buffering). The system is confluent,
+  so one successful schedule means none gets stuck: `kernel_check_sound` gives
+  deadlock freedom under any progress order. It is decided per instance by
+  computation.
+
+Still trusted or not covered:
+
+1. **Schedule independence** of the values for race-free kernels (SpaDA's
+   Kahn-style guarantee). `race_free` proves only that `map` order does not
+   matter; that `c = op; await c` equals an immediately awaited `op` is argued,
+   not proved.
+2. **More buffering than rendezvous** is assumed not to introduce deadlock.
+3. **The host** is assumed always ready to send inputs and take outputs.
+4. **Deadlock checks** are per instance (fixed sizes), not for all sizes.
+5. **Not yet interpreted** (the interpreter fails rather than guessing):
+   `MetaFor`, multicast and extern streams, `close`, `foreach` without a range,
+   and multi-index loops.
+6. **SpaDA → CSL** is trusted.
+
+`SpadaDataflow.v` also holds reusable lemmas for state updates and common loops
+(`foreach_add_forward`, `foreach_add`, `map_add`). A new kernel needs only its
+IR file and a proof file. `ReduceSpec.v` is the element-wise reduction spec.
+
 ## Chain reduction
 
 `ChainReduce.v` is the SpaDA paper's chain reduction as Spatial IR, and
-`ChainReduceVariant.v` a receive-first relay. Their correctness proof is in
-[../kahn](../kahn/README.md). `make -f Full.mk chain` generates WSE-3 CSL for
-both; `benchmarks/chain_wse3.sh` compiles and simulates it (`cslc` and
+`ChainReduceVariant.v` a receive-first relay. `ChainReduceProof.v` proves, for
+every `K >= 2`, any addition, and both variants, that running the IR kernel
+puts `a0 + (a1 + (... + a_{K-1}))` on `out[0]` and drains every other stream
+(`chain_reduce_correct`). With associative, commutative addition the order of
+the vectors does not matter (`chain_reduce_any_order`). `K = 1` is rejected as
+ill-formed, because PE 0 would get two compute blocks
+(`chain_reduce_K1_ill_formed`). Which code each PE runs is computed from the IR
+term (`program_shape`), not transcribed. Both variants are race-free for every
+`K` and deadlock-free for `K = 2..6` (`SpadaRaces`, `SpadaDeadlock`).
+
+`make -f Full.mk chain` checks the proofs, then generates WSE-3 CSL for both
+variants; `benchmarks/chain_wse3.sh` compiles and simulates it (`cslc` and
 `cs_python` on `PATH`). The receive-first version matches bit-exactly; the
-original stalls because SpaDA mis-orders its router switch positions.
+original stalls because SpaDA mis-orders its router switch positions, which is
+a compiler problem outside the proof.

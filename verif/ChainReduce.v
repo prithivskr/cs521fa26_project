@@ -5,7 +5,7 @@ Open Scope string_scope.
 Open Scope Z_scope.
 
 (** Chain reduction from the SpaDA paper (its [N] read as [K]).
-    Proof: ../kahn/ChainReduceProof.v. *)
+    Proof: ChainReduceProof.v. *)
 Module ChainReduce.
 Definition xy := [coord "x"; coord "y"].
 Definition row (lo hi : Z) := Grid (interval lo hi) (Range (int 0) None None).

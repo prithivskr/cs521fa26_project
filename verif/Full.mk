@@ -3,7 +3,7 @@ ROCQ ?= rocq
 OCAMLC ?= ocamlc
 PYTHON ?= .venv/bin/python
 FLAGS = -Q . SpatialCSL
-.PHONY: all check emit lower test numeric-test chain-emit chain
+.PHONY: all check emit lower test numeric-test chain-proof chain-emit chain
 all: check
 SpadaIR.vo: SpadaIR.v
 	$(ROCQ) compile $(FLAGS) $<
@@ -93,7 +93,19 @@ ChainReduce.vo: ChainReduce.v SpadaIR.vo
 	$(ROCQ) compile $(FLAGS) $<
 ChainReduceVariant.vo: ChainReduceVariant.v ChainReduce.vo
 	$(ROCQ) compile $(FLAGS) $<
-chain-emit: ChainReduceVariant.vo ChainReduceExtract.v chain_emit.ml
+ReduceSpec.vo: ReduceSpec.v
+	$(ROCQ) compile $(FLAGS) $<
+SpadaDataflow.vo: SpadaDataflow.v SpadaIR.vo ReduceSpec.vo
+	$(ROCQ) compile $(FLAGS) $<
+ChainReduceProof.vo: ChainReduceProof.v SpadaDataflow.vo ChainReduceVariant.vo
+	$(ROCQ) compile $(FLAGS) $<
+SpadaRaces.vo: SpadaRaces.v ChainReduceVariant.vo SpadaDataflow.vo
+	$(ROCQ) compile $(FLAGS) $<
+SpadaDeadlock.vo: SpadaDeadlock.v ChainReduceVariant.vo SpadaDataflow.vo
+	$(ROCQ) compile $(FLAGS) $<
+chain-proof: ChainReduceProof.vo SpadaRaces.vo SpadaDeadlock.vo
+# Only proved kernels are emitted.
+chain-emit: chain-proof ChainReduceExtract.v chain_emit.ml
 	mkdir -p _build
 	$(ROCQ) compile $(FLAGS) ChainReduceExtract.v
 	$(OCAMLC) -c -o _build/chain_generated.cmi _build/chain_generated.mli

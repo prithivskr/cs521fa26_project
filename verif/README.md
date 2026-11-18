@@ -17,6 +17,8 @@ scalar compiler theorem.
 
 Requirements: Rocq 9.1, OCaml, and Python with the packages in `requirements.txt`.
 Python 3.13+ enables the independent host `math.fma` differential tests.
+SpaDA is not included; clone it next to `verif/` (tested at commit `984975f`):
+`git clone https://github.com/spcl/spada`.
 
 ```sh
 cd verif
@@ -296,3 +298,12 @@ same logical FIFO network; physical CSL correctness remains outside its scope.
 The SDK-style SUMMA matrix multiplication example, accumulator optimization,
 proofs, generated CSL and explicit proof boundaries are documented in
 [SUMMA.md](SUMMA.md). Build it with `make -f Full.mk summa summa-test`.
+
+## Chain reduction
+
+`ChainReduce.v` is the SpaDA paper's chain reduction as Spatial IR, and
+`ChainReduceVariant.v` a receive-first relay. Their correctness proof is in
+[../kahn](../kahn/README.md). `make -f Full.mk chain` generates WSE-3 CSL for
+both; `benchmarks/chain_wse3.sh` compiles and simulates it (`cslc` and
+`cs_python` on `PATH`). The receive-first version matches bit-exactly; the
+original stalls because SpaDA mis-orders its router switch positions.

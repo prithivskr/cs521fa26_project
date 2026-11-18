@@ -3,7 +3,7 @@ ROCQ ?= rocq
 OCAMLC ?= ocamlc
 PYTHON ?= .venv/bin/python
 FLAGS = -Q . SpatialCSL
-.PHONY: all check emit lower test numeric-test
+.PHONY: all check emit lower test numeric-test chain-emit chain
 all: check
 SpadaIR.vo: SpadaIR.v
 	$(ROCQ) compile $(FLAGS) $<
@@ -88,3 +88,19 @@ summa-test: summa-emit SummaLocalProof.vo
 summa-perf-sources: summa-emit
 	$(PYTHON) spada_bridge.py generated-spada/summa-baseline.json --arch wse3 --benchmarking --output generated-spada/summa-perf-baseline-wse3
 	$(PYTHON) spada_bridge.py generated-spada/summa-cached.json --arch wse3 --benchmarking --output generated-spada/summa-perf-cached-wse3
+
+ChainReduce.vo: ChainReduce.v SpadaIR.vo
+	$(ROCQ) compile $(FLAGS) $<
+ChainReduceVariant.vo: ChainReduceVariant.v ChainReduce.vo
+	$(ROCQ) compile $(FLAGS) $<
+chain-emit: ChainReduceVariant.vo ChainReduceExtract.v chain_emit.ml
+	mkdir -p _build
+	$(ROCQ) compile $(FLAGS) ChainReduceExtract.v
+	$(OCAMLC) -c -o _build/chain_generated.cmi _build/chain_generated.mli
+	$(OCAMLC) -I _build -c -o _build/chain_generated.cmo _build/chain_generated.ml
+	$(OCAMLC) -I _build -c -o _build/chain_emit.cmo chain_emit.ml
+	$(OCAMLC) -I _build -o _build/chain_emit _build/chain_generated.cmo _build/chain_emit.cmo
+	./_build/chain_emit generated-spada
+chain: chain-emit
+	$(PYTHON) spada_bridge.py generated-spada/chain-reduce.json --arch wse3 --output generated-spada/chain-reduce-wse3
+	$(PYTHON) spada_bridge.py generated-spada/chain-reduce-recvfirst.json --arch wse3 --output generated-spada/chain-reduce-recvfirst-wse3

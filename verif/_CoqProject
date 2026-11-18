@@ -21,3 +21,5 @@ SpadaRoutingExamples.v
 Summa.v
 SummaLocalProof.v
 SummaExtract.v
+ChainReduce.v
+ChainReduceVariant.v

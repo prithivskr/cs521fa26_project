@@ -125,6 +125,10 @@ def validate_types(node):
         if (isinstance(node, ir.ConstantLiteral) and f.name == "value"
                 and node.dtype == ScalarType.bool and type(node.value) is bool):
             continue
+        # SendStatement.validate allows a ternary stream; its annotation does not.
+        if (isinstance(node, ir.SendStatement) and f.name == "stream_name"
+                and isinstance(node.stream_name, ir.TernaryOperator)):
+            continue
         if f.init and not matches(getattr(node, f.name), hints[f.name]):
             raise ValueError(f"invalid type for {type(node).__name__}.{f.name}")
 
